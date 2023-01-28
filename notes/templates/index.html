@@ -8,8 +8,7 @@
 
 
 <div x-data="getCategories()">
-    <h3 class="text-center mt-5" style="color:#777">все категории заметок пользователя <span class="fw-bold">{{ request.user.username }}</span>
-    </h3>
+   <h3 class="text-center mt-5" style="color:#777">все категории заметок пользователя <span class="fw-bold">{{ request.user.username }}</span></h3>
     <form id="category-form">
         {% csrf_token %}
     </form>
@@ -17,9 +16,7 @@
         <div class="input-group px-5">
             <input x-model="newCategory" class="form-control" placeholder="Название категории">
             <input x-model="newDescription" class="form-control" placeholder="Описание категории">
-            <button @click="addCategory(newCategory, newDescription)" type="button" class="btn btn-primary"><i
-                    class="uil uil-notes"></i> Добавить категорию
-            </button>
+  <button @click="addCategory(newCategory, newDescription)" type="button" class="btn btn-primary"><i class="uil uil-notes"></i> Добавить категорию</button>
         </div>
         <div class="card-group p-5">
             <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -28,20 +25,16 @@
                         <div class="card h-100 bg-light">
                             <div class="card-header">
                                 <h4 class="card-title text-center my-2"><a x-text="category.title"
-                                                                           x-bind:href="'/category/'+category.id"></a>
-                                </h4>
+         x-bind:href="'/category/'+category.id"></a></h4>
                             </div>
                             <div class="card-body">
                                 <p x-text="category.description" class="card-text pt-3 pb-3"></p>
                             </div>
                             <div class="card-footer">
                                 <button type="button" class="btn btn-primary btn-sm">
-                                    <a x-bind:href="'/category/'+category.id"
-                                       style="text-decoration: none; color:#fff;"><i class="uil uil-search"></i> Открыть</a>
+       <a x-bind:href="'/category/'+category.id" style="text-decoration: none; color:#fff;"><i class="uil uil-search"></i> Открыть</a>
                                     <button @click="removeCategory(category.id)"
-                                            class="btn btn-danger btn-sm float-end"><i class="uil uil-trash-alt"></i>
-                                        Удалить
-                                    </button>
+         class="btn btn-danger btn-sm float-end"><i class="uil uil-trash-alt"></i> Удалить</button>
                             </div>
                         </div>
                     </div>
@@ -60,21 +53,9 @@
             newCategory: '',
             newDescription: '',
             categories: [
-                { % for category in categories %
-        }
-        {
-            'title'
-        :
-            '{{ category.title }}', 'id'
-        :
-            '{{ category.id }}', 'description'
-        :
-            '{{ category.description }}'
-        }
-    ,
-        {%
-            endfor %
-        }
+            {% for category in categories %}
+            { 'title': '{{ category.title }}', 'id': '{{ category.id }}', 'description': '{{ category.description }}' },
+            {% endfor %}
     ]
     }
     };
@@ -85,8 +66,8 @@
     const addCategory = async (title, description) => {
         try {
             const res = await axios.post('/api/category',
-                {title, description},
-                {headers: {'X-CSRFToken': csrftoken}}
+        { title, description },
+        { headers: { 'X-CSRFToken': csrftoken }}
             );
             location.reload();
         } catch (e) {
@@ -97,7 +78,7 @@
     const removeCategory = async categoryId => {
         try {
             const res = await axios.delete('/api/category/' + categoryId,
-                {headers: {'X-CSRFToken': csrftoken}}
+        { headers: { 'X-CSRFToken': csrftoken }}
             );
             location.reload();
         } catch (e) {
@@ -108,6 +89,7 @@
 </script>
 
 {% endblock %}
+
 
 
 

@@ -2,13 +2,12 @@
 from typing import List
 
 from django.shortcuts import get_object_or_404
-from ninja import NinjaAPI
+from ninja import NinjaAPI, Schema
 
 from notes.models import Category, Note
 from notes.schemas import NoteIn, CategoryIn, CategoryOut, NoteOut, NoteUpd
 
 api = NinjaAPI()
-
 
 @api.post('/notes', tags=['Заметки'])
 def create_note(request, payload: NoteIn):
@@ -18,18 +17,15 @@ def create_note(request, payload: NoteIn):
     note = Note.objects.create(category=category, **data)
     return {'id': note.id}
 
-
 @api.post('/category', tags=['Категории'])
 def create_category(request, payload: CategoryIn):
     category = Category.objects.create(**payload.dict())
     return {'id': category.id}
 
-
 @api.get('/note/{note_id}', response=NoteOut, tags=['Заметки'])
 def get_note(request, note_id: int):
     note = get_object_or_404(Note, id=note_id)
     return note
-
 
 @api.get('/category/{category_id}', response=CategoryOut, tags=['Категории'])
 def get_category(request, category_id: int):
@@ -46,6 +42,7 @@ def list_notes(request):
     notes = Note.objects.all()
     return notes
 
+
 @api.patch('/notes/{note_id}', tags=['Заметки'])
 def update_note(request, note_id: int, payload: NoteUpd):
     note = get_object_or_404(Note, id=note_id)
@@ -53,6 +50,7 @@ def update_note(request, note_id: int, payload: NoteUpd):
         setattr(note, attr, value)
     note.save()
     return {'success': True}
+
 
 @api.put('/category/{category_id}', tags=['Категории'])
 def update_category(request, category_id: int, payload: CategoryIn):
@@ -62,17 +60,16 @@ def update_category(request, category_id: int, payload: CategoryIn):
     category.save()
     return {'success': True}
 
-@api.delete('/notes/{notes_id}', tags=['Заметки'])
+
+@api.delete('/notes/{note_id}', tags=['Заметки'])
 def delete_notes(request, note_id: int):
     note = get_object_or_404(Note, id=note_id)
     note.delete()
     return {'success': True}
+
 
 @api.delete('/category/{category_id}', tags=['Категории'])
 def delete_category(request, category_id: int):
     category = get_object_or_404(Category, id=category_id)
     category.delete()
     return {'success': True}
-
-
-

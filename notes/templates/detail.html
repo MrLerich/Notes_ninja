@@ -6,17 +6,14 @@
 
 
 <div x-data="getNotes()">
-    <h3 class="text-center mt-5" style="color:#777">заметки в категории <span
-            class="fw-bold">{{ category.title }}</span></h3>
+    <h3 class="text-center mt-5" style="color:#777">заметки в категории <span class="fw-bold">{{ category.title }}</span></h3>
     <form id="note-form">
         {% csrf_token %}
     </form>
     <div class="container pt-5">
         <div class="input-group px-5">
             <input x-model="newNote" class="form-control" placeholder="Текст заметки">
-            <button @click="addNote(newNote, {{ category.id }} )" class="btn btn-primary"><i class="uil uil-notes"></i>
-                Добавить заметку
-            </button>
+            <button @click="addNote(newNote, {{ category.id }} )" class="btn btn-primary"><i class="uil uil-notes"></i> Добавить заметку</button>
         </div>
     </div>
     <div class="container pt-5">
@@ -26,22 +23,15 @@
                     <div class="col">
                         <div class="card h-100 bg-light mb-3">
                             <div class="card-header">
-                                <button @click="removeNote(note.id)" class="btn btn-danger"><i
-                                        class="uil uil-trash-alt"></i> Удалить
-                                </button>
-                            </div>
+                <button @click="removeNote(note.id)" class="btn btn-danger"><i class="uil uil-trash-alt"></i> Удалить</button></div>
                             <div class="card-body">
                                 <p x-text="note.title" class="card-text pt-3 pb-3"></p>
                             </div>
                             <div class="card-footer">
                                 <button @click="updateNote(note.id, false)"
-                                        x-show="note.status == 'True'" class="btn btn-success float-end"><i
-                                        class="uil uil-check"></i> Сделано
-                                </button>
+                        x-show="note.status == 'True'" class="btn btn-success float-end"><i class="uil uil-check"></i> Сделано</button>
                                 <button @click="updateNote(note.id, true)"
-                                        x-show="note.status == 'False'" class="btn btn-warning float-end"><i
-                                        class="uil uil-rocket"></i> В процессе
-                                </button>
+                        x-show="note.status == 'False'" class="btn btn-warning float-end"><i class="uil uil-rocket"></i> В процессе</button>
                             </div>
                         </div>
                     </div>
@@ -61,23 +51,9 @@
         return {
             newNote: '',
             notes: [
-                { % for note in category.notes.all %
-        }
-        {
-            'title'
-        :
-            '{{ note.title }}',
-                'id'
-        :
-            '{{ note.id }}',
-                'status'
-        :
-            '{{ note.completed }}'
-        }
-    ,
-        {%
-            endfor %
-        }
+            {% for note in category.notes.all %}
+            { 'title': '{{ note.title }}', 'id': '{{ note.id }}', 'status': '{{ note.completed }}' },
+            {% endfor %}
     ]
     }
     };
@@ -85,8 +61,8 @@
     const addNote = async (title, categoryId) => {
         try {
             const res = await axios.post('/api/notes',
-                {title, category_id: categoryId},
-                {headers: {'X-CSRFToken': csrftoken}}
+        { title, category_id: categoryId },
+        { headers: { 'X-CSRFToken': csrftoken }}
             );
             location.reload();
         } catch (e) {
@@ -97,7 +73,7 @@
     const removeNote = async noteId => {
         try {
             const res = await axios.delete('/api/notes/' + noteId,
-                {headers: {'X-CSRFToken': csrftoken}}
+        { headers: { 'X-CSRFToken': csrftoken }}
             );
             location.reload();
         } catch (e) {
@@ -108,8 +84,8 @@
     const updateNote = async (noteId, noteStatus) => {
         try {
             const res = await axios.patch('/api/notes/' + noteId,
-                {id: noteId, completed: noteStatus},
-                {headers: {'X-CSRFToken': csrftoken}}
+        { id: noteId, completed: noteStatus},
+        { headers: { 'X-CSRFToken': csrftoken }}
             );
             location.reload();
         } catch (e) {
